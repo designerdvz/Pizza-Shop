@@ -50,7 +50,7 @@ export const CartItem = ({item}) => {
         <div className="cart__item-price">
             <b>{item.count * item.price} ₽</b>
         </div>
-        <div className="cart__item-remove" onClick={() => dispatch(() => removeItem(item))}>
+        <div className="cart__item-remove" onClick={() => dispatch(removeItem(item))}>
             <div className="button button--outline button--circle">
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
