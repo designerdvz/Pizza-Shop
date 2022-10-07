@@ -1,13 +1,19 @@
 import React, {useState} from 'react'
+import {useDispatch} from "react-redux";
+import {addItem, setActiveSizePizza, setActiveTypePizza} from "../../Redux/Slices/cartSlice";
 
-function PizzaBlock({title, price, imageUrl, sizes, types}) {
+function PizzaBlock({pizza}) {
+    const {
+        id, title, price, imageUrl, sizes, types,
+    } = {...pizza}
     const [pizzaCount, setPizzaCount] = useState(0)
     const typeNames = ['тонкое','традиционное']
     const [activeType, setActiveType] = useState(0)
     const [activeSize, setActiveSize] = useState(0)
-
+    const dispatch= useDispatch()
 
     return (
+
         <div className={"pizza-block-wrapper"}>
         <div className="pizza-block">
         <img
@@ -18,15 +24,23 @@ function PizzaBlock({title, price, imageUrl, sizes, types}) {
         <h4 className="pizza-block__title">{title}</h4>
         <div className="pizza-block__selector">
             <ul>
-                {types.map((el, index) => <li key={index} onClick={() => setActiveType(index)} className={(activeType === index) ? 'active': ''}>{typeNames[el]}</li> )}
+                {types.map((el, index) => <li key={index} onClick={() =>  setActiveType(index)} className={(activeType === index) ? 'active': ''}>{typeNames[el]}</li> )}
             </ul>
             <ul>
                 {sizes.map ((el ,index) => <li key={index} onClick={() =>  setActiveSize(index)} className={(activeSize === index) ? 'active': ''}> {el} см.</li>)}
             </ul>
         </div>
         <div className="pizza-block__bottom">
+
             <div className="pizza-block__price">от {price} ₽</div>
-            <button  onClick={ () => setPizzaCount(pizzaCount + 1)} className="button button--outline button--add">
+            <button  onClick={() => {
+                setPizzaCount(pizzaCount + 1)
+                dispatch(addItem(pizza))
+                dispatch(setActiveTypePizza({type: activeType, id: pizza.id}))
+                dispatch(setActiveSizePizza({size: activeSize, id: pizza.id}))
+                console.log(activeType)
+            }
+            }className="button button--outline button--add">
                 <svg
                     width="12"
                     height="12"
@@ -39,7 +53,8 @@ function PizzaBlock({title, price, imageUrl, sizes, types}) {
                         fill="white"
                     />
                 </svg>
-                <span>Добавить</span>
+                <span >
+                    Добавить</span>
                 <i>{pizzaCount}</i>
             </button>
         </div>

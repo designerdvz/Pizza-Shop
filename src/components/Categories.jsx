@@ -1,11 +1,15 @@
 import React from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setCategory} from "../Redux/Slices/categorySlice";
 
-function Categories(props) {
+function Categories() {
 
-    const categories = ['Все','Мясные','Вегетарианская','Гриль','Острые','Закрытые']
+    const categories = useSelector((state) => state.categoryReducer.categories)
+    const category = useSelector((state) => state.categoryReducer.category) // достаю данные из store
+    const dispatch= useDispatch()
 
     function setActive(index) {
-        props.setCategory(index)
+        dispatch(setCategory(index))
     }
 
     return(
@@ -13,7 +17,7 @@ function Categories(props) {
             <ul>
                 {categories.map((el, i) =>
                     (<li key={i} onClick={() => setActive(i)}
-                         className={(props.category === i) ? "active" : ""}>{el}</li>)
+                         className={(category === i) ? "active" : ""}>{el}</li>)
                         )}
             </ul>
         </div>

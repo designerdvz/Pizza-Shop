@@ -1,22 +1,37 @@
-import React, {useState} from "react";
+import React, {createRef, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setSort} from "../Redux/Slices/sortSlice";
 
 function Sort(props) {
     const [open, setOpen] = React.useState(false)
-    const sortList = [
-        {name: 'популярности', sortProperty: 'rating'},
-        {name: 'самой редкой', sortProperty: '-rating'},
-        {name: 'высокой цене', sortProperty: 'price'},
-        {name: 'низкой цене', sortProperty: '-price'},
-        {name: 'алфавиту', sortProperty: '-title'},
-        {name: 'обратному алфавиту', sortProperty: 'title'},
-    ]
 
-    function addSort(index) {
-        props.setSort(index)
+    const sort = useSelector((state) => state.sortReducer.sort)         //Достаю из стора необходимое
+    const sortList = useSelector((state) => state.sortReducer.sortList)
+    const dispatch= useDispatch()
+    const sortRef = React.useRef()
+
+    function addSort(el) {
+        dispatch(setSort(el)) //тут диспатч, т.к у нас setSort это AC, а в скобках el, т.к это payload
         setOpen(false)
     }
 
-    return (<div className="sort">
+    React.useEffect (() => { //это действие когда компонент создался
+        const handleClickSort = (event) => {
+            if (!event.path.includes(sortRef.current)) {
+                setOpen(false)
+
+            }
+        }
+        document.body.addEventListener('click', handleClickSort )
+
+        return () => {   //это действие при размонтировании, вызовет когда компонент будет умирать
+            document.body.removeEventListener('click', handleClickSort )
+
+
+        }
+    }, [])
+
+    return (<div className="sort" ref={sortRef}>
         <div className="sort__label">
             <svg
                 width="10"
@@ -31,13 +46,13 @@ function Sort(props) {
                 />
             </svg>
             <b>Сортировка по:</b>
-            <span onClick={() => setOpen(!open)} >{props.sort.name}</span>
+            <span onClick={() => setOpen(!open)} >{sort.name}</span>
         </div>
         {open && (<div className="sort__popup">
             <ul>
                 {sortList.map ((el, index) => <li key={index} onClick= {() => {addSort(el)
                     }
-                } className={(props.sort === el.sort)?"active" : ""}> {el.name} </li>)}
+                } className={(sort === el.sort)?"active" : ""}> {el.name} </li>)}
             </ul>
         </div>)}
     </div>)

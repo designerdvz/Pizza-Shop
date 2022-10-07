@@ -1,8 +1,34 @@
-import React from "react";
-
+import React, {useState} from "react";
+import {SearchContext} from "../../App"
 import s from "./Search.module.scss"
 import close from "../../assets/img/close.svg"
-const Search = (props) => {
+import debounce from 'lodash.debounce'
+
+
+const Search = () => {
+    const [value, setValue] = React.useState('')
+
+     const {searchValue, setSearchValue} = React.useContext(SearchContext )
+    const inputRef = React.useRef()
+    const closeClick = () => {
+         setSearchValue('')
+        setValue('')
+        inputRef.current.focus()
+    }
+
+
+    const onChangeInput = (event) => {
+        setValue(event.target.value) //чтоб сразу видеть то, что печатаем
+        setSearchValueDeb(event.target.value) //отложенно сохраняем строку для поиска
+    }
+    const setSearchValueDeb = React.useCallback(debounce((str) => { //Вообще нужно было создать до задания компоненты, т.к.
+        // каждый раз не создаваля этот debounce. Но для того, чтобы создалась 1 раз эта const, нужно использовать
+        // с хуком useCallback, через запятую параметр, от которого она зависит. В данном случае получаем что 1 раз
+        // содаться const, т.к. []
+        setSearchValue(str)
+    }, 400), [])
+
+
     return (
         <div className={s.root}>
             <svg className={s.searchImg} enableBackground="new 0 0 64 64" height="64px" id="Icons" version="1.1"
@@ -23,9 +49,10 @@ const Search = (props) => {
                     </g>
                 </g>
             </svg>
-            <input value={props.searchValue} onChange={(event) => props.setSearchValue(event.target.value)}
+            <input ref={inputRef} value={value} onChange={onChangeInput
+            }
                    className={s.input} placeholder="Поиск пиццы ..."/>
-            {props.searchValue && <img onClick={() => props.setSearchValue('')} className={s.closeImg} src={close}/> }
+            {searchValue && <img onClick={closeClick} className={s.closeImg} src={close}/> }
         </div>
     )
 }
