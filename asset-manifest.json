@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/Pizza-Shop/static/css/main.cc00850f.css",
-    "main.js": "/Pizza-Shop/static/js/main.bf024d4d.js",
+    "main.js": "/Pizza-Shop/static/js/main.2c727452.js",
     "static/js/787.3d66f7fd.chunk.js": "/Pizza-Shop/static/js/787.3d66f7fd.chunk.js",
     "static/media/pizza-logo.svg": "/Pizza-Shop/static/media/pizza-logo.56ac87032d8f6fdf863326acd06c0d97.svg",
     "static/media/logo.svg": "/Pizza-Shop/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/Pizza-Shop/index.html",
     "static/media/close.svg": "/Pizza-Shop/static/media/close.3721b02ec61c1015e90388746e266d15.svg",
     "main.cc00850f.css.map": "/Pizza-Shop/static/css/main.cc00850f.css.map",
-    "main.bf024d4d.js.map": "/Pizza-Shop/static/js/main.bf024d4d.js.map",
+    "main.2c727452.js.map": "/Pizza-Shop/static/js/main.2c727452.js.map",
     "787.3d66f7fd.chunk.js.map": "/Pizza-Shop/static/js/787.3d66f7fd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cc00850f.css",
-    "static/js/main.bf024d4d.js"
+    "static/js/main.2c727452.js"
   ]
 }
