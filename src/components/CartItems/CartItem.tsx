@@ -2,13 +2,46 @@ import React, {useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {countMinus, countPlus, removeItem} from "../../Redux/Slices/cartSlice";
 
+type CartProps = {
+    count: number;
+    price: number;
+    title: string;
+    currentTypePizza: number;
+    currentSizePizza: number;
+    id: number;
+    imageUrl: string;
+    sizes: number [];
+    types: number [];
+}
 
+const CartItem: React.FC<CartProps> = ({
+                                           count,
+                                           price,
+                                           title,
+                                           currentTypePizza,
+                                           currentSizePizza,
+                                           id,
+                                           imageUrl,
+                                           sizes,
+                                           types
+                                       }) => {
 
-export const CartItem = ({item}) => {
+    const item = {
+        count,
+        price,
+        title,
+        currentTypePizza,
+        currentSizePizza,
+        id,
+        imageUrl,
+        types,
+        sizes
+    }
+
     const type = ['тонкое', 'традиционное']
-    const sizes = ['26','30','40']
+    const size = ['26', '30', '40']
     const dispatch = useDispatch()
-    return ( <div className="cart__item">
+    return (<div className="cart__item">
         <div className="cart__item-img">
             <img
                 className="pizza-block__image"
@@ -18,10 +51,11 @@ export const CartItem = ({item}) => {
         </div>
         <div className="cart__item-info">
             <h3>{item.title}</h3>
-            <p>{type[item.currentTypePizza]} тесто, {sizes[item.currentSizePizza]} см.</p>
+            <p>{type[item.currentTypePizza]} тесто, {size[item.currentSizePizza]} см.</p>
         </div>
         <div className="cart__item-count">
-            <div className="button button--outline button--circle cart__item-count-minus" onClick={ () => dispatch(countMinus(item))}>
+            <div className="button button--outline button--circle cart__item-count-minus"
+                 onClick={() => dispatch(countMinus(item))}>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -34,7 +68,8 @@ export const CartItem = ({item}) => {
 
             </div>
             <b>{item.count}</b>
-            <div className="button button--outline button--circle cart__item-count-plus"  onClick={ () => dispatch(countPlus(item))}>
+            <div className="button button--outline button--circle cart__item-count-plus"
+                 onClick={() => dispatch(countPlus(item))}>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -50,7 +85,11 @@ export const CartItem = ({item}) => {
         <div className="cart__item-price">
             <b>{item.count * item.price} ₽</b>
         </div>
-        <div className="cart__item-remove" onClick={() => dispatch(removeItem(item))}>
+        <div className="cart__item-remove" onClick={() => {
+            if (window.confirm(`Удалить пиццу ${item.title} из корзины?`)) {
+                dispatch(removeItem(item))
+            }
+        }}>
             <div className="button button--outline button--circle">
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                      xmlns="http://www.w3.org/2000/svg">

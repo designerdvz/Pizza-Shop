@@ -1,27 +1,77 @@
 import React, {useState} from 'react'
-import {useDispatch} from "react-redux";
-import {addItem, setActiveSizePizza, setActiveTypePizza} from "../../Redux/Slices/cartSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    addItem, selectorCartItems,
+    setActiveSizePizza,
+    setActiveTypePizza
+} from "../../Redux/Slices/cartSlice";
+import {Link} from 'react-router-dom'
 
-function PizzaBlock({pizza}) {
-    const {
-        id, title, price, imageUrl, sizes, types,
-    } = {...pizza}
-    const [pizzaCount, setPizzaCount] = useState(0)
-    const typeNames = ['тонкое','традиционное']
+
+
+type PizzaBlockProps = {
+    id: number,
+    title: string,
+    price: number,
+    imageUrl: string,
+    sizes: number [],
+    types: number [],
+    count: number,
+    currentTypePizza: number;
+    currentSizePizza: number;
+}
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({id, title, price, imageUrl, sizes, types, count,  currentTypePizza, currentSizePizza} ) => {
+    const pizza: PizzaBlockProps = {
+        id,
+        title,
+        price,
+        imageUrl,
+        sizes,
+        types,
+        count,
+        currentTypePizza,
+        currentSizePizza
+    }
+
+    const typeNames: string[] = ['тонкое','традиционное']
     const [activeType, setActiveType] = useState(0)
     const [activeSize, setActiveSize] = useState(0)
     const dispatch= useDispatch()
+    const CartItems = useSelector(selectorCartItems)
+    
+    let ThisItemCount = [0]
+
+    const ItemCount = CartItems.map((el, i) => {
+       return ( (pizza.id == el.id) ?  el.count  : 0 )
+
+    })
+
+    ThisItemCount = ItemCount.filter(function(elem) {
+        return (elem !== 0);
+    });
+
+    if ( ThisItemCount.length == 0) {
+        ThisItemCount = [0]
+    } else {
+        ThisItemCount = ItemCount.filter(function(elem) {
+            return (elem !== 0);
+        })
+    }
+
 
     return (
 
         <div className={"pizza-block-wrapper"}>
         <div className="pizza-block">
+            <Link to={`/pizza/${id}`}>
         <img
             className="pizza-block__image"
             src= {imageUrl}
             alt="Pizza"
         />
         <h4 className="pizza-block__title">{title}</h4>
+            </Link>
         <div className="pizza-block__selector">
             <ul>
                 {types.map((el, index) => <li key={index} onClick={() =>  setActiveType(index)} className={(activeType === index) ? 'active': ''}>{typeNames[el]}</li> )}
@@ -33,14 +83,14 @@ function PizzaBlock({pizza}) {
         <div className="pizza-block__bottom">
 
             <div className="pizza-block__price">от {price} ₽</div>
-            <button  onClick={() => {
-                setPizzaCount(pizzaCount + 1)
+
+            <button onClick={() => {
                 dispatch(addItem(pizza))
                 dispatch(setActiveTypePizza({type: activeType, id: pizza.id}))
                 dispatch(setActiveSizePizza({size: activeSize, id: pizza.id}))
-                console.log(activeType)
             }
-            }className="button button--outline button--add">
+            }
+                     className="button button--outline button--add">
                 <svg
                     width="12"
                     height="12"
@@ -53,9 +103,9 @@ function PizzaBlock({pizza}) {
                         fill="white"
                     />
                 </svg>
-                <span >
-                    Добавить</span>
-                <i>{pizzaCount}</i>
+                <span > Добавить</span>
+
+                <i>{ThisItemCount}</i>
             </button>
         </div>
     </div>

@@ -1,14 +1,27 @@
 import logoSvg from '../assets/img/pizza-logo.svg'
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Search from "./Search";
 import {useSelector} from "react-redux";
+import {selectorCartItems, selectorCartSum, selectorCartTotalCount} from "../Redux/Slices/cartSlice";
 
 function Header() {
-    const sum = useSelector((state) => state.cartReducer.sum)
+    const sum = useSelector(selectorCartSum)
+    const items = useSelector(selectorCartItems)
+    const Totalcount = useSelector(selectorCartTotalCount)
+    const location = useLocation()
 
-    const items = useSelector((state) => state.cartReducer.items)
-    const Totalcount = useSelector((state) => state.cartReducer.Totalcount)
+
+    React.useEffect(() => {
+        const json = JSON.stringify(items)
+            localStorage.setItem('cart', json)
+
+        const sumJson = JSON.stringify(sum)
+        localStorage.setItem('sum', sumJson)
+
+        const Tcount = JSON.stringify(Totalcount)
+        localStorage.setItem('TotalCount', Tcount)
+    }, [items])
 
 
     return (<div className="header">
@@ -22,8 +35,8 @@ function Header() {
                 </div>
             </div>
             </Link>
-            <Search />
-            <div className="header__cart">
+            {location.pathname !== '/cart' && (<Search />)}
+            {location.pathname !== '/cart' && (<div className="header__cart">
                 <Link to="/cart" className="button button--cart">
                     <span>{sum} ₽</span>
                     <div className="button__delimiter"></div>
@@ -59,6 +72,7 @@ function Header() {
                     <span>{Totalcount}</span>
                 </Link>
             </div>
+            )}
         </div>
     </div>)
 }

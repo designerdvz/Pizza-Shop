@@ -3,11 +3,11 @@ import ReactPaginate from "react-paginate";
 
 import s from "./pagination.module.scss"
 import {useDispatch, useSelector} from "react-redux";
-import {setCurrentPage} from "../../Redux/Slices/paginationSlice";
+import {selectorCurrentPage, selectorPageCount, setCurrentPage} from "../../Redux/Slices/paginationSlice";
 
 const Pagination = ( ) => {
-    const currentPage = useSelector((state) => state.pagination.currentPage) // достаю данные из store
-    const pageCount = useSelector((state) => state.pagination.pageCount) // достаю данные из store
+    const currentPage = useSelector(selectorCurrentPage) // достаю данные из store
+    const pageCount = useSelector(selectorPageCount) // достаю данные из store
     const dispatch= useDispatch()
 
     return (
@@ -20,7 +20,6 @@ const Pagination = ( ) => {
                 previousLabel={'<-'}
                 breakLabel={' ... '}
                 pageRangeDisplayed={4}
-                renderOnZeroPageCount={null}
             />
         </>
     )

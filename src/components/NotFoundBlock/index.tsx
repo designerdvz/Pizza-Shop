@@ -1,4 +1,4 @@
-import React from 'react';
+
 import s from './NotFoundBlock.module.scss'
 
 const NotFoundBlock = () => {

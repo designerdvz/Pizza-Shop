@@ -1,31 +1,35 @@
 import React, {useState} from "react";
-import {SearchContext} from "../../App"
 import s from "./Search.module.scss"
 import close from "../../assets/img/close.svg"
 import debounce from 'lodash.debounce'
+import {useDispatch, useSelector} from "react-redux";
+import {selectorSearchValue, setSearch} from "../../Redux/Slices/searchSlice";
 
 
 const Search = () => {
     const [value, setValue] = React.useState('')
+    const searchValue = useSelector(selectorSearchValue)
+    const dispatch = useDispatch()
 
-     const {searchValue, setSearchValue} = React.useContext(SearchContext )
-    const inputRef = React.useRef()
-    const closeClick = () => {
-         setSearchValue('')
+    const inputRef = React.useRef<HTMLInputElement>(null)
+
+    const closeClick = (event: React.MouseEvent<HTMLImageElement>) => {
+        dispatch(setSearch(''))
         setValue('')
-        inputRef.current.focus()
+        inputRef.current?.focus()
     }
 
 
-    const onChangeInput = (event) => {
+    const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value) //чтоб сразу видеть то, что печатаем
         setSearchValueDeb(event.target.value) //отложенно сохраняем строку для поиска
     }
+
     const setSearchValueDeb = React.useCallback(debounce((str) => { //Вообще нужно было создать до задания компоненты, т.к.
         // каждый раз не создаваля этот debounce. Но для того, чтобы создалась 1 раз эта const, нужно использовать
         // с хуком useCallback, через запятую параметр, от которого она зависит. В данном случае получаем что 1 раз
         // содаться const, т.к. []
-        setSearchValue(str)
+        dispatch(setSearch(str))
     }, 400), [])
 
 
@@ -49,8 +53,8 @@ const Search = () => {
                     </g>
                 </g>
             </svg>
-            <input ref={inputRef} value={value} onChange={onChangeInput
-            }
+            <input ref={inputRef} value={value} onChange={onChangeInput}
+
                    className={s.input} placeholder="Поиск пиццы ..."/>
             {searchValue && <img onClick={closeClick} className={s.closeImg} src={close}/> }
         </div>

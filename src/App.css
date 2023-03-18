@@ -7,6 +7,12 @@
   pointer-events: none;
 }
 
+.full_pizza_img {
+  width: 200px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

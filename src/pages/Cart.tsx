@@ -1,18 +1,20 @@
-import React from "react";
+
 import {Link} from "react-router-dom";
-import s from "../components/NotFoundBlock/NotFoundBlock.module.scss";
-import {clearAll} from "../Redux/Slices/cartSlice";
+import {clearAll, selectorCartItems, selectorCartSum, selectorCartTotalCount} from "../Redux/Slices/cartSlice";
 import {useDispatch, useSelector} from "react-redux";
 import CartItem from "../components/CartItems/CartItem";
-import {useCallback} from "react";
+import CartEmpty from "./CartEmpty";
 
 export const Cart = () => {
 
     const dispatch = useDispatch()
-    const items = useSelector((state) => state.cartReducer.items)
-    const Totalcount = useSelector((state) => state.cartReducer.Totalcount)
-    const sum = useSelector((state) => state.cartReducer.sum)
+    const items = useSelector(selectorCartItems)
+    const Totalcount = useSelector(selectorCartTotalCount)
+    const sum = useSelector(selectorCartSum)
 
+    if (!sum) {
+        return <CartEmpty/>
+    }
 
     return (
         <div className="container container--cart">
@@ -51,15 +53,18 @@ export const Cart = () => {
                                   strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
 
-                        <span onClick={() => dispatch(clearAll())}>Очистить корзину</span>
+                        <span onClick={() => {
+                            if (window.confirm('Очистить корзину?')) {
+                                dispatch(clearAll())
+                            }
+                        }}>Очистить корзину</span>
                     </div>
                 </div>
                 <div className="content__items">
 
-                    {items.map((el, index) => {
-                        return  <CartItem item = {el}/>
+                    {items.map((el: any, index: number) => {
+                        return  <CartItem key={index} {...el}/>
                     }) }
-
 
                     </div>
                         <div className="cart__bottom">

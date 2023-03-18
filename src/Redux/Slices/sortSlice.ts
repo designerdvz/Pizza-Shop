@@ -1,7 +1,19 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import React from "react";
+import {RootState} from "../store";
 
-const initialState = {
+
+type TypeSortList = {
+    name: string;
+    sortProperty: string;
+}
+
+interface SortState {
+    sort: TypeSortList;
+    sortList: TypeSortList[];
+}
+
+const initialState: SortState = {
     sort: {
         name: 'популярности',
         sortProperty: 'rating'
@@ -19,10 +31,13 @@ export const sortSlice = createSlice({
     name: 'sort',
     initialState,
     reducers: {
-        setSort: (state, action) => {state.sort = action.payload} //payload Нужен чтоб передавать что-то в action
-    } // тут всегда, если что-то нужно в качестве параметра передавать будет (state, action)
+        setSort: (state: SortState, action:PayloadAction<TypeSortList>) => {state.sort = action.payload}
+    }
 
 })
+
+export const selectorSort = (state: RootState) => state.sortReducer.sort
+export const selectorSortList = (state: RootState) => state.sortReducer.sortList
 export const { setSort} = sortSlice.actions // Это AC
 
 export default sortSlice.reducer
